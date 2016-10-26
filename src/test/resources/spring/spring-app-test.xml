@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+">
+
+    <import resource="classpath*:spring/*-context.xml"/>
+
+    <context:component-scan base-package="com.yellowaxe.log, test.targets"/>
+
+    <bean id="logAspect" class="com.yellowaxe.log.LogAspect">
+    </bean>
+
+    <aop:config proxy-target-class="true">
+
+        <aop:pointcut id="allServiceMethods" expression="execution(* test.targets.*.*(..))"/>
+
+        <aop:aspect id="logParametersAspect" ref="logAspect">
+            <aop:around method="log" pointcut-ref="allServiceMethods"/>
+        </aop:aspect>
+
+    </aop:config>
+
+
+</beans>
